@@ -1,6 +1,7 @@
 from django.db import models
-from apps.users.models import User, Contribution
+from apps.users.models import User
 # Create your models here.
+
 
 
 class Expedition(models.Model):
@@ -53,9 +54,6 @@ class Sighting(models.Model):
     is_preening = models.BooleanField(default=False)
     is_mating = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-    contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE)
-    '''photos = models.ImageField('Foto del ave', upload_to='post/', max_length=255, null=False, blank = False)
-    video = models.FileField('Foto del ave', upload_to='post/', max_length=255, null=False, blank = False)'''#Hay que crear tablas para los archivos
 
     class Meta:
         """Meta definition for MODELNAME."""
@@ -63,6 +61,16 @@ class Sighting(models.Model):
         verbose_name = 'Avistamiento'
         verbose_name_plural = 'Avistamientos'
 
+class Contribution(models.Model):
+    id = models.AutoField(primary_key= True)
+    is_correct = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sightings = models.ManyToManyField(Sighting, null =True, blank = True)
+
+    class Meta:
+        verbose_name = 'Contribución'
+        verbose_name_plural = 'Contribuciones'
+        
 class Photo(models.Model):
     """Model definition for Photo."""
 

@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from simple_history.models import HistoricalRecords
 
-
 class UserManager(BaseUserManager):
     def _create_user(self, names, last_names, username, email, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
@@ -71,11 +70,4 @@ class Achievement(models.Model):
     def __str__(self):
         return f'{self.name} {self.description}'
     
-class Contribution(models.Model):
-    id = models.AutoField(primary_key= True)
-    is_correct = models.BooleanField(default=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name = 'Contribución'
-        verbose_name_plural = 'Contribuciones'
