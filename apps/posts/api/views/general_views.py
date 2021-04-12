@@ -10,7 +10,7 @@ class ExpeditionListAPIView(generics.ListAPIView):
     
     def get_queryset(self):
         #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.all()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
         return queryset
 
     def post(self, request): #Sobre escrbiendo el método
@@ -23,10 +23,62 @@ class ExpeditionListAPIView(generics.ListAPIView):
 class ExpeditionCreatedAPIView(generics.CreateAPIView):
     serializer_class = ExpeditionSerializer
 
+class ExpeditionRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = ExpeditionSerializer
+
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+
+class ExpeditionDestroyAPIView(generics.DestroyAPIView):
+    serializer_class = ExpeditionSerializer
+
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+    
+    def delete(self, request, pk=None):
+        expedition = self.get_queryset().filter(id = pk).first()
+        if expedition:
+            expedition.state = False
+            expedition.save()
+            return Response({'message': 'Expedición eliminada correctamente' }, status = status.HTTP_200_OK)
+        return Response({'message': 'No existe esa expedición' }, status = status.HTTP_400_BAD_REQUEST)
+
+class ExpeditionUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = ExpeditionSerializer
+
+    def get_queryset(self, pk):
+    
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True).filter(id = pk).first()
+        return queryset
+
+    def patch(self, request, pk=None):
+        expedition = self.get_queryset(pk)
+        if expedition:
+            expedition_serializer = self.serializer_class(expedition)
+            return Response(expedition_serializer.data, status = status.HTTP_200_OK)
+        return Response({'message': 'No existe esa expedición' }, status = status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        expedition = self.get_queryset(pk)
+        if expedition:
+            expedition_serializer = self.serializer_class(expedition, data = request.data)
+            if expedition_serializer.is_valid():
+                expedition_serializer.save()
+                return Response(expedition_serializer.data, status = status.HTTP_200_OK)
+            return Response(expedition_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
 class ContributionListAPIView(generics.ListAPIView):
     serializer_class = ContributionSerializer
     
     def get_queryset(self):
         #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.all()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
         return queryset

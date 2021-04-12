@@ -7,7 +7,7 @@ class ExpeditionSerializer(serializers.ModelSerializer):
 #   user = serializers.StringRelatedField()#Para mostrar el str del modelo
     class Meta:
         model = Expedition
-        fields = '__all__'
+        exclude = ('state',)
 
     def to_representation(self, instance):
         return {
@@ -24,14 +24,14 @@ class ExpeditionSerializer(serializers.ModelSerializer):
 class BirdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bird
-        fields = '__all__'
+        exclude = ('state',)
 
 class SightingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sighting
-        fields = '__all__'
+        exclude = ('state',)
 
 class ContributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contribution
-        fields = '__all__'
+        exclude = ('state',)

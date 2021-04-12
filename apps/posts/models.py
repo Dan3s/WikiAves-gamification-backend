@@ -11,6 +11,7 @@ class Expedition(models.Model):
     date = models.DateField('Fecha de expedición', null=False, blank = False)
     city = models.CharField('Ciudad',max_length = 255, null=False, blank = False)
     region = models.CharField('Región',max_length = 255, null=False, blank = False)
+    state = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
@@ -29,6 +30,7 @@ class Bird(models.Model):
     name = models.CharField(max_length=255)
     specie = models.CharField(max_length=255)
     sightings = models.IntegerField(default=0)
+    state = models.BooleanField(default=True)
 
     class Meta:
         """Meta definition for Bird."""
@@ -54,6 +56,7 @@ class Sighting(models.Model):
     is_preening = models.BooleanField(default=False)
     is_mating = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    state = models.BooleanField(default=True)
 
     class Meta:
         """Meta definition for MODELNAME."""
@@ -66,6 +69,7 @@ class Contribution(models.Model):
     is_correct = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     sightings = models.ManyToManyField(Sighting, null =True, blank = True)
+    state = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Contribución'
@@ -78,6 +82,7 @@ class Photo(models.Model):
     id = models.AutoField(primary_key= True)
     name= models.CharField(max_length=255)
     file= models.FileField(upload_to='images/', null=False, verbose_name="Fotos")
+    state = models.BooleanField(default=True)
     sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
 
     class Meta:
@@ -97,6 +102,7 @@ class Video(models.Model):
     id = models.AutoField(primary_key= True)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='videos/', null=True, verbose_name="Videos")
+    state = models.BooleanField(default=True)
     sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
 
     class Meta:
@@ -116,6 +122,7 @@ class Audio(models.Model):
     id = models.AutoField(primary_key= True)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='audios/', null=True, verbose_name="Audios")
+    state = models.BooleanField(default=True)
     sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
 
     class Meta:
