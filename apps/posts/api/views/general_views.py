@@ -1,11 +1,90 @@
 from rest_framework import generics
+from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 
 #from apps.posts.models import Expedition, Bird, Sighting
 from apps.posts.api.serializers.general_serializers import ExpeditionSerializer, BirdSerializer, SightingSerializer, ContributionSerializer
 
-class ExpeditionListAPIView(generics.ListAPIView):
+class ExpeditionViewSet(viewsets.ModelViewSet): #En ExpeditionsViewSet se ve cómo se sobre escriben los métodos para personalizarlos
+    serializer_class = ExpeditionSerializer
+    
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+       
+    def create(self, request):
+        '''
+        Crea una expedición
+
+        '''
+        serializer = self.serializer_class(data = request.data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response({"mesage": "Expedición creada correctamente"}, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request):
+        '''
+        Lista todas las expediciones
+
+        '''
+        expedition_serializer = self.get_serializer(self.get_queryset(), many = True)
+        return Response(expedition_serializer.data, status = status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        '''
+        Actualiza una expedición
+
+        '''
+        expedition = self.get_queryset().filter(id = pk).first()
+        if expedition:
+            expedition_serializer = self.serializer_class(expedition, data = request.data)
+            if expedition_serializer.is_valid():
+                expedition_serializer.save()
+                return Response(expedition_serializer.data, status = status.HTTP_200_OK)
+            return Response(expedition_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+    def destroy(self, request, pk=None):
+        '''
+        Elimina una expedición
+
+        '''
+        expedition = self.get_queryset().filter(id = pk).first()
+        if expedition:
+            expedition.state = False
+            expedition.save()
+            return Response({'message': 'Expedición eliminada correctamente' }, status = status.HTTP_200_OK)
+        return Response({'message': 'No existe esa expedición' }, status = status.HTTP_400_BAD_REQUEST)
+
+
+class ContributionViewSet(viewsets.ModelViewSet):
+    serializer_class = ContributionSerializer
+    
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+
+class SightingViewSet(viewsets.ModelViewSet):
+    serializer_class = SightingSerializer
+    
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+
+class BirdViewSet(viewsets.ModelViewSet):
+    serializer_class = BirdSerializer
+    
+    def get_queryset(self):
+        #queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
+        return queryset
+
+'''class ExpeditionListAPIView(generics.ListAPIView):
     serializer_class = ExpeditionSerializer
     
     def get_queryset(self):
@@ -70,15 +149,5 @@ class ExpeditionUpdateAPIView(generics.UpdateAPIView):
                 expedition_serializer.save()
                 return Response(expedition_serializer.data, status = status.HTTP_200_OK)
             return Response(expedition_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+'''
 
-
-
-
-
-class ContributionListAPIView(generics.ListAPIView):
-    serializer_class = ContributionSerializer
-    
-    def get_queryset(self):
-        #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
-        return queryset

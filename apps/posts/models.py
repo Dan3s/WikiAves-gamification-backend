@@ -68,7 +68,7 @@ class Contribution(models.Model):
     id = models.AutoField(primary_key= True)
     is_correct = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    sightings = models.ManyToManyField(Sighting, null =True, blank = True)
+    sightings = models.ManyToManyField(Sighting)
     state = models.BooleanField(default=True)
 
     class Meta:
