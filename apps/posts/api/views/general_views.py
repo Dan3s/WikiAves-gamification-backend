@@ -4,9 +4,10 @@ from rest_framework import status
 from rest_framework.response import Response
 
 #from apps.posts.models import Expedition, Bird, Sighting
+from apps.users.authentication_mixins import Authentication
 from apps.posts.api.serializers.general_serializers import ExpeditionSerializer, BirdSerializer, SightingSerializer, ContributionSerializer
 
-class ExpeditionViewSet(viewsets.ModelViewSet): #En ExpeditionsViewSet se ve cómo se sobre escriben los métodos para personalizarlos
+class ExpeditionViewSet(Authentication, viewsets.ModelViewSet): #En ExpeditionsViewSet se ve cómo se sobre escriben los métodos para personalizarlos
     serializer_class = ExpeditionSerializer
     
     def get_queryset(self):
@@ -60,7 +61,7 @@ class ExpeditionViewSet(viewsets.ModelViewSet): #En ExpeditionsViewSet se ve có
         return Response({'message': 'No existe esa expedición' }, status = status.HTTP_400_BAD_REQUEST)
 
 
-class ContributionViewSet(viewsets.ModelViewSet):
+class ContributionViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = ContributionSerializer
     
     def get_queryset(self):
@@ -68,7 +69,7 @@ class ContributionViewSet(viewsets.ModelViewSet):
         queryset = self.serializer_class.Meta.model.objects.filter(state=True)
         return queryset
 
-class SightingViewSet(viewsets.ModelViewSet):
+class SightingViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = SightingSerializer
     
     def get_queryset(self):
@@ -76,7 +77,7 @@ class SightingViewSet(viewsets.ModelViewSet):
         queryset = self.serializer_class.Meta.model.objects.filter(state=True)
         return queryset
 
-class BirdViewSet(viewsets.ModelViewSet):
+class BirdViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = BirdSerializer
     
     def get_queryset(self):
