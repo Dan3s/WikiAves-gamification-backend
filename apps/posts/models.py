@@ -3,25 +3,6 @@ from apps.users.models import User
 # Create your models here.
 
 
-
-class Expedition(models.Model):
-    id = models.AutoField(primary_key= True)
-    name = models.CharField('Nombre', max_length = 255, null=False, blank = False)
-    description = models.CharField('Descripción', max_length = 255, null=True, blank = True)
-    date = models.DateField('Fecha de expedición', null=False, blank = False)
-    city = models.CharField('Ciudad',max_length = 255, null=False, blank = False)
-    region = models.CharField('Región',max_length = 255, null=False, blank = False)
-    state = models.BooleanField(default=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = 'Expedición'
-        verbose_name_plural = 'Expediciones'
-    
-    def __str__(self):
-        """Unicode representation of Photo."""
-        return self.description
-
 class Bird(models.Model):
     """Model definition for Bird."""
 
@@ -42,6 +23,25 @@ class Bird(models.Model):
         """Unicode representation of Bird."""
         return self.name
 
+class Expedition(models.Model):
+    id = models.AutoField(primary_key= True)
+    name = models.CharField('Nombre', max_length = 255, null=False, blank = False)
+    description = models.CharField('Descripción', max_length = 255, null=True, blank = True)
+    date = models.DateField('Fecha de expedición', null=False, blank = False)
+    city = models.CharField('Ciudad',max_length = 255, null=False, blank = False)
+    region = models.CharField('Región',max_length = 255, null=False, blank = False)
+    state = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sighted_birds = models.ManyToManyField(Bird, through='Sighting', related_name='pepe')
+    
+
+    class Meta:
+        verbose_name = 'Expedición'
+        verbose_name_plural = 'Expediciones'
+    
+    def __str__(self):
+        """Unicode representation of Photo."""
+        return self.description
 
 class Sighting(models.Model):
     """Model definition for MODELNAME."""

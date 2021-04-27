@@ -23,6 +23,23 @@ class UserManager(BaseUserManager):
     def create_superuser(self, name, last_names, username, email, password=None, **extra_fields):
         return self._create_user(name, last_names, username, email, password, True, True, **extra_fields)
 
+class Achievement(models.Model):
+    id = models.AutoField(primary_key= True)
+    name = models.CharField(max_length= 255, null=False, blank = False)
+    description = models.CharField(max_length=255, null=False, blank = False)
+    icon = models.ImageField(upload_to='logros/', max_length = 255, null =True, blank = True)
+    xp_value = models.IntegerField(null=False, blank = False)
+
+    class Meta:
+        verbose_name = 'Logro'
+        verbose_name_plural = 'Logros'
+
+    '''USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email','name','last_name']'''
+
+    def __str__(self):
+        return f'{self.name} {self.description}'
+
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key= True)
     name = models.CharField('Nombres', max_length = 255, null=False, blank = False)
@@ -34,9 +51,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     region = models.CharField('Región',max_length = 255, null=False, blank = False)
     profile_pic = models.ImageField('Imagen de perfil', upload_to='perfil/', max_length=255, null=True, blank = True)
     xp = models.IntegerField('Experiencia', null=True, blank = True)
+    level_name = models.CharField('Nombre de nivel', max_length = 255, default='Torcasa')
     pages_visited = models.IntegerField('Páginas visitadas', null=True, blank = True)
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
+    achievements = models.ManyToManyField(Achievement, through='UserAchievement')
     historical = HistoricalRecords()
     objects = UserManager()
 
@@ -50,24 +69,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f'{self.name} {self.last_names}'
 
-class Achievement(models.Model):
+class UserAchievement(models.Model):
     id = models.AutoField(primary_key= True)
-    name = models.CharField(max_length= 255, null=False, blank = False)
-    description = models.CharField(max_length=255, null=False, blank = False)
-    active = models.BooleanField(default=False)
-    icon = models.ImageField(upload_to='logros/', max_length = 255, null =True, blank = True)
-    xp_value = models.IntegerField(null=False, blank = False)
     unlock_date = models.DateField(null=True, blank = True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'Logro'
-        verbose_name_plural = 'Logros'
+        verbose_name = 'LogroUsuario'
+        verbose_name_plural = 'LogrosDeUsuario'
 
     '''USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email','name','last_name']'''
 
     def __str__(self):
-        return f'{self.name} {self.description}'
-    
+        return f'{self.id} {self.achievement}'
 

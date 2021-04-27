@@ -37,5 +37,7 @@ class UserListSerializer(serializers.ModelSerializer):
             'password': instance['password'],
             'email': instance['email'],
             'city': instance['city'],
-            'region': instance['region']
+            'region': instance['region'],
+            'experience': instance['xp'],
+            'level': instance['level_name']
         }
