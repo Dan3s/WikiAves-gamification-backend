@@ -42,11 +42,12 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('admin/', admin.site.urls),
-    path('', Login.as_view(), name = 'Login'),
+    path('login/', Login.as_view(), name = 'Login'),
     path('logout/', Logout.as_view(), name = "Logout"),
     path('refresh-token/', UserToken.as_view(), name = "refresh_token"),
 
     path('user/', include('apps.users.api.urls')),
+    path('user/', include('apps.users.api.routers')),
     #path('post/', include('apps.posts.api.urls')),
     path('posts/', include('apps.posts.api.routers')),
 ]

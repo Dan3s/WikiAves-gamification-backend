@@ -51,7 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     region = models.CharField('Región',max_length = 255, null=False, blank = False)
     profile_pic = models.ImageField('Imagen de perfil', upload_to='perfil/', max_length=255, null=True, blank = True)
     xp = models.IntegerField('Experiencia', null=True, blank = True)
-    level_name = models.CharField('Nombre de nivel', max_length = 255, default='Torcasa')
+    level_name = models.CharField('Nombre de nivel', max_length = 255, default='Colibrí')
     pages_visited = models.IntegerField('Páginas visitadas', null=True, blank = True)
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)

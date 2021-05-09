@@ -5,12 +5,26 @@ from rest_framework.response import Response
 from apps.posts.utils.achievement_utils import AchievementsCheckers
 
 #from apps.posts.models import Expedition, Bird, Sighting
+from apps.posts.utils.user_xp_utils import UserXpUtils
 from apps.users.authentication_mixins import Authentication
 from apps.posts.api.serializers.general_serializers import ExpeditionSerializer, BirdSerializer, SightingSerializer, ContributionSerializer
 
 class ExpeditionViewSet(Authentication, viewsets.ModelViewSet): #En ExpeditionsViewSet se ve cómo se sobre escriben los métodos para personalizarlos
     serializer_class = ExpeditionSerializer
-    
+
+    check_achieve = ''
+    check_level_up = ''
+    def check_levels_and_achievements(self):
+        achieve_checker = AchievementsCheckers()
+        check_achieve = achieve_checker.check_first_expedition(self.user)#-----
+        level_checker = UserXpUtils()
+        check_level_up = level_checker.check_level(self.user)
+        if check_achieve is not None:
+            self.check_achieve = check_achieve
+
+        if check_level_up is not None:
+            self.check_level_up = check_level_up
+
     def get_queryset(self):
         #queryset = super(CLASS_NAME, self).get_queryset()
         queryset = self.serializer_class.Meta.model.objects.filter(state=True)
@@ -24,11 +38,8 @@ class ExpeditionViewSet(Authentication, viewsets.ModelViewSet): #En ExpeditionsV
         serializer = self.serializer_class(data = request.data)
         if(serializer.is_valid()):
             serializer.save()
-            checker =  AchievementsCheckers()
-            check_message = checker.check_first_expedition(self.user)
-            if check_message is not None:
-                return  Response({"mesage": "Expedición creada correctamente", "is_achieve_unlocked": check_message}, status = status.HTTP_201_CREATED)
-            return Response({"mesage": "Expedición creada correctamente"}, status = status.HTTP_201_CREATED)
+            self.check_levels_and_achievements()
+            return Response({"mesage": "Expedición creada correctamente", "is_achieve_unlocked": self.check_achieve, "is_level_up": self.check_level_up}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
