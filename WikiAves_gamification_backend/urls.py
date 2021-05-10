@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.config.settings import production
-from django.config.urls.static import static
+from django.conf.settings import production
+from django.conf.urls.static import static
 
 from rest_framework import permissions
 
