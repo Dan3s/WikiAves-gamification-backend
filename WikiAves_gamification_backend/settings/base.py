@@ -133,11 +133,13 @@ CORS_ALLOWED_ORIGINS = [
     "https://example.com",
     "https://sub.example.com",
     "http://localhost:3000",
-    "http://127.0.0.1:9000"
+    "http://127.0.0.1:9000",
+    "https://wiki-aves-backend.herokuapp.com",
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://wiki-aves-backend.herokuapp.com",
 ]
 
 # Static files (CSS, JavaScript, Images)

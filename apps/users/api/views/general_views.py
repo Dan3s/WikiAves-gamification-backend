@@ -30,3 +30,15 @@ class ProfileAPIView(Authentication, viewsets.GenericViewSet):
     def get(self, request, *args, **kwargs):
         user_serializer = self.get_serializer(self.get_queryset())
         return Response(user_serializer.data)
+
+class UserAchievementsAPIView(Authentication, viewsets.GenericViewSet):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        # queryset = super(CLASS_NAME, self).get_queryset()
+        queryset = self.serializer_class.Meta.model.objects.filter(id=self.user.id)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        user_serializer = self.get_serializer(self.get_queryset())
+        return Response(user_serializer.data)
