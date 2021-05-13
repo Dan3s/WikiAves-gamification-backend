@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.conf.settings import production
+from django.conf import settings
 from django.conf.urls.static import static
 
 from rest_framework import permissions
@@ -50,6 +50,6 @@ urlpatterns = [
 
     path('user/', include('apps.users.api.urls')),
     path('user/', include('apps.users.api.routers')),
-    #path('post/', include('apps.posts.api.urls')),
+    #path('posts/', include('apps.posts.api.urls')),
     path('posts/', include('apps.posts.api.routers')),
-] + static(production.STATIC_URL, document_root=production.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

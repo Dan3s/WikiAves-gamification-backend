@@ -1,5 +1,7 @@
-from rest_framework import generics
-from rest_framework import viewsets
+from requests import Response
+from rest_framework import generics, status, viewsets
+
+from rest_framework.views import APIView
 
 from apps.users.models import Achievement
 from apps.users.api.serializers.achievement_serializers import AchievementSerializer
@@ -16,10 +18,15 @@ class AchievementListAPIView(generics.ListAPIView):
         queryset = Achievement.objects.filter(active=True)
         return queryset
 
-class UserProfileView(Authentication, viewsets.ModelViewSet):
+
+class ProfileAPIView(Authentication, viewsets.GenericViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        #queryset = super(CLASS_NAME, self).get_queryset()
+        # queryset = super(CLASS_NAME, self).get_queryset()
         queryset = self.serializer_class.Meta.model.objects.filter(id=self.user.id)
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        user_serializer = self.get_serializer(self.get_queryset())
+        return Response(user_serializer.data)
