@@ -1,9 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-from apps.users.api.views.general_views import ProfileView
+from apps.users.api.views.general_views import ProfileAPIView
 
 router = DefaultRouter()
 
-#router.register(r'myprofile', ProfileView, basename='myprofile')
+router.register(r'myprofile', ProfileAPIView, basename='myprofile')
 urlpatterns = router.urls
 
