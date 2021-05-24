@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from apps.users.api.serializers.achievement_serializers import UserAchievementSerializer
 from apps.users.models import User
 
 class UserTokenSerializer(serializers.ModelSerializer):
@@ -40,4 +42,18 @@ class UserListSerializer(serializers.ModelSerializer):
             'region': instance['region'],
             'experience': instance['xp'],
             'level': instance['level_name']
+        }
+
+class UserRankingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'username': instance.username,
+            'city': instance.city,
+            'region': instance.region,
+            'experience': instance.xp,
+            'level': instance.level_name
         }

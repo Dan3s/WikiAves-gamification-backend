@@ -11,7 +11,8 @@ class AchievementsCheckers(object):
     def create_user_achievement(self, user, achievement_name):
         achievement = Achievement.objects.filter(name=achievement_name).first()
         user.achievements.add(achievement, through_defaults={'unlock_date': datetime.now()})
-        UserXpUtils.add_xp(user, achievement.xp_value)
+        user_xp = UserXpUtils()
+        user_xp.add_xp(user, achievement.xp_value)
         return achievement_name
 
     def check_first_expedition(self, user):  # Logro de primera publicación
