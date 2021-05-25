@@ -5,7 +5,7 @@ from simple_history.models import HistoricalRecords
 class UserManager(BaseUserManager):
     def _create_user(self, names, last_names, username, email, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
-            names = names,
+            name = names,
             last_names = last_names,
             username = username,
             email = email,

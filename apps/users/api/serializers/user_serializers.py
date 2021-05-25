@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        fields = '__all__'
 
     def to_representation(self, instance):
         return {
@@ -47,6 +48,7 @@ class UserListSerializer(serializers.ModelSerializer):
 class UserRankingSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        fields = '__all__'
 
     def to_representation(self, instance):
         return {
