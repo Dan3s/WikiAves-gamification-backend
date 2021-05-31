@@ -55,7 +55,7 @@ class Sighting(models.Model):
     is_flying = models.BooleanField(default=False)
     is_preening = models.BooleanField(default=False)
     is_mating = models.BooleanField(default=False)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.CharField(null=True, blank=True, max_length = 255)
     likes = models.IntegerField(default=0)
     is_correct = models.BooleanField(default=False)
     state = models.BooleanField(default=True)
@@ -70,6 +70,7 @@ class Contribution(models.Model):
     id = models.AutoField(primary_key= True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     sightings = models.ManyToManyField(Sighting)
+    is_correct = models.BooleanField(default=False)
     state = models.BooleanField(default=True)
 
     class Meta:

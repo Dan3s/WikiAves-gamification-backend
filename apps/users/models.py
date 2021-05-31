@@ -46,6 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_names = models.CharField('Apellidos', max_length = 255, null=False, blank = False)
     username = models.CharField('Nombre de usuario', max_length = 50, unique = True, null=False, blank = False)
     email = models.EmailField('Correo Electrónico',max_length = 255, unique = True, null=False, blank = False)
+    description = models.CharField('Descripción', max_length = 255, unique = False, null=True, blank = True)
     birthdate = models.DateField('Fecha de nacimiento', null=True, blank = True)
     city = models.CharField('Ciudad',max_length = 255, null=False, blank = False)
     region = models.CharField('Región',max_length = 255, null=False, blank = False)

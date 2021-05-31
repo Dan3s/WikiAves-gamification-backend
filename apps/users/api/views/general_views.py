@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from apps.users.models import Achievement
 from apps.users.api.serializers.achievement_serializers import AchievementSerializer, UserAchievementSerializer
-from apps.users.api.serializers.user_serializers import UserSerializer, UserRankingSerializer
+from apps.users.api.serializers.user_serializers import UserSerializer, UserRankingSerializer, UserProfileSerializer
 from apps.users.authentication_mixins import Authentication
 
 class AchievementListAPIView(Authentication, generics.ListAPIView):
@@ -19,7 +19,7 @@ class AchievementListAPIView(Authentication, generics.ListAPIView):
 
 
 class ProfileView(Authentication, generics.RetrieveAPIView):
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
 
     def get_object(self):
         queryset = self.serializer_class.Meta.model.objects.filter(id=self.user.id)

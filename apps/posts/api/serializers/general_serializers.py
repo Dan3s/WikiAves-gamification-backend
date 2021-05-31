@@ -3,22 +3,6 @@ from rest_framework import serializers
 from apps.posts.models import Expedition, Bird, Sighting, Contribution
 
 
-class ExpeditionSerializer(serializers.ModelSerializer):
-#   user = serializers.StringRelatedField()#Para mostrar el str del modelo
-    class Meta:
-        model = Expedition
-        exclude = ('state',)
-
-    def to_representation(self, instance):
-        return {
-            'id': instance.id,
-            'name': instance.name,
-            'description': instance.description,
-            'date': instance.date,
-            'city': instance.city,
-            'region': instance.region,
-            'user': instance.user.name 
-        }
 
 
 class BirdSerializer(serializers.ModelSerializer):
@@ -56,4 +40,23 @@ class ContributionSerializer(serializers.ModelSerializer):
             'is_correct': instance.is_correct,
             'user': instance.user.name,
             'sightings': instance.sightings.all() if instance.sightings.all() is not None else ''
-        } 
+        }
+
+class ExpeditionSerializer(serializers.ModelSerializer):
+#   user = serializers.StringRelatedField()#Para mostrar el str del modelo
+    #sighted_birds = SightingSerializer(many = True, source = 'sightings')
+
+    class Meta:
+        model = Expedition
+        exclude = ('state',)
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'name': instance.name,
+            'description': instance.description,
+            'date': instance.date,
+            'city': instance.city,
+            'region': instance.region,
+            'user': instance.user.name
+        }
