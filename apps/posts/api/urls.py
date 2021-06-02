@@ -1,15 +1,10 @@
 from django.urls import path
-#from apps.posts.api.views.general_views import ExpeditionListAPIView, ExpeditionCreatedAPIView, ContributionListAPIView, ExpeditionRetrieveAPIView, ExpeditionDestroyAPIView, ExpeditionUpdateAPIView
 
-
+from apps.posts.api.views.sighted_birds_views import SightingsByExpeditionListAPIView, BirdCreateAPIView
 
 urlpatterns = [
-    '''path('expeditions/list/', ExpeditionListAPIView.as_view(), name = 'expeditions_list'),
-    path('expeditions/create/', ExpeditionCreatedAPIView.as_view(), name = 'expeditions_create'),
-    path('expeditions/retrieve/<int:pk>', ExpeditionRetrieveAPIView.as_view(), name = 'expeditions_retrieve'),
-    path('expeditions/destroy/<int:pk>', ExpeditionDestroyAPIView.as_view(), name = 'expeditions_destroy'),
-    path('expeditions/update/<int:pk>', ExpeditionUpdateAPIView.as_view(), name = 'expeditions_update'),
+    path('expeditions/<int:id>/sightings', SightingsByExpeditionListAPIView.as_view(), name = 'sightings_by_expedition'),
+    path('sighted_bird', BirdCreateAPIView.as_view(), name = 'create_bird'),
+    #path('sighting', SightingCreateAPIView.as_view(), name = 'sightings'),
 
-    path('contributions/', ContributionListAPIView.as_view(), name = 'contributions'),
-    '''
 ]

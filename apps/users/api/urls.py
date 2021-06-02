@@ -7,8 +7,8 @@ urlpatterns = [
     path('user/', user_api_view, name = 'usuario_api'),
     path('user/<int:pk>/', user_detail_view, name = 'user_detail_api_view'),
     path('achievements/', AchievementListAPIView.as_view(), name = 'achievements'),
-    path('myprofile/', ProfileView.as_view(), name='myprofile'),
-    path('myachievements/', UserAchievementsListAPIView.as_view(), name='myachievements'),
+    path('user_profile/<int:pk>', ProfileView.as_view(), name='user_profile'),
+    path('user_achievements/<int:pk>', UserAchievementsListAPIView.as_view(), name='user_achievements'),
     path('ranking/', UserRankingListAPIView.as_view(), name='ranking'),
     path('ranking/<str:region>', UserRankingByRegionListAPIView.as_view(), name='ranking_by_region'),
     ]

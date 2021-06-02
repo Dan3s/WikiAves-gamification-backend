@@ -21,18 +21,21 @@ class AchievementListAPIView(Authentication, generics.ListAPIView):
 class ProfileView(Authentication, generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
 
-    def get_object(self):
-        queryset = self.serializer_class.Meta.model.objects.filter(id=self.user.id)
-        # make sure to catch 404's below
+    def get_queryset(self):
+        user_id = self.kwargs['pk']
+        queryset = self.serializer_class.Meta.model.objects.filter(id=user_id)
+
         obj = queryset.get()
-        return obj
+        return queryset
+
 
 class UserAchievementsListAPIView(Authentication, generics.ListAPIView):
     serializer_class = UserAchievementSerializer
 
     def get_queryset(self):
         # queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.filter(user=self.user.id)
+        user_id = self.kwargs['pk']
+        queryset = self.serializer_class.Meta.model.objects.filter(user=user_id)
         return queryset
 
 class UserRankingListAPIView(Authentication, generics.ListAPIView):

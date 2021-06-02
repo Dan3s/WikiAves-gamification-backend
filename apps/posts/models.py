@@ -8,9 +8,9 @@ class Bird(models.Model):
 
     # TODO: Define fields here
     id = models.AutoField(primary_key= True)
-    name = models.CharField(max_length=255)
-    specie = models.CharField(max_length=255)
-    sightings = models.IntegerField(default=0)
+    common_name = models.CharField(max_length=255)
+    scientific_name = models.CharField(max_length=255)
+    sightings = models.IntegerField(default=0, blank=True)
     state = models.BooleanField(default=True)
 
     class Meta:
@@ -18,10 +18,6 @@ class Bird(models.Model):
 
         verbose_name = 'Ave'
         verbose_name_plural = 'Aves'
-
-    def __str__(self):
-        """Unicode representation of Bird."""
-        return self.name
 
 class Expedition(models.Model):
     id = models.AutoField(primary_key= True)
@@ -38,10 +34,7 @@ class Expedition(models.Model):
     class Meta:
         verbose_name = 'Expedición'
         verbose_name_plural = 'Expediciones'
-    
-    def __str__(self):
-        """Unicode representation of Photo."""
-        return self.description
+
 
 class Sighting(models.Model):
     """Model definition for MODELNAME."""
@@ -50,13 +43,13 @@ class Sighting(models.Model):
     id = models.AutoField(primary_key= True)
     expedition = models.ForeignKey(Expedition, on_delete=models.CASCADE)
     bird = models.ForeignKey(Bird, on_delete=models.CASCADE)
-    creation_date = models.DateField('Fecha de creación', null=False, blank = False)
+    date = models.DateField('Fecha de creación', null=False, blank = False)
     is_eating = models.BooleanField(default=False)
     is_flying = models.BooleanField(default=False)
     is_preening = models.BooleanField(default=False)
     is_mating = models.BooleanField(default=False)
-    is_verified = models.CharField(null=True, blank=True, max_length = 255)
-    likes = models.IntegerField(default=0)
+    is_verified = models.CharField(null=True, blank=True, max_length = 25)
+    likes = models.IntegerField(default=0, blank=True)
     is_correct = models.BooleanField(default=False)
     state = models.BooleanField(default=True)
 
@@ -65,6 +58,7 @@ class Sighting(models.Model):
 
         verbose_name = 'Avistamiento'
         verbose_name_plural = 'Avistamientos'
+
 
 class Contribution(models.Model):
     id = models.AutoField(primary_key= True)
@@ -82,10 +76,9 @@ class Photo(models.Model):
 
     # TODO: Define fields here
     id = models.AutoField(primary_key= True)
-    name= models.CharField(max_length=255)
-    file= models.FileField(upload_to='images/', null=False, verbose_name="Fotos")
-    state = models.BooleanField(default=True)
-    sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
+    file= models.ImageField(upload_to='photos/', null=False, verbose_name="Fotos")
+    state = models.BooleanField(default=True, blank=True)
+    sighting = models.ForeignKey(Sighting, related_name='sighting_photos', on_delete=models.CASCADE)
 
     class Meta:
         """Meta definition for Photo."""
@@ -102,10 +95,9 @@ class Video(models.Model):
 
     # TODO: Define fields here
     id = models.AutoField(primary_key= True)
-    name = models.CharField(max_length=255)
     file = models.FileField(upload_to='videos/', null=True, verbose_name="Videos")
-    state = models.BooleanField(default=True)
-    sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
+    state = models.BooleanField(default=True, blank=True)
+    sighting = models.ForeignKey(Sighting, related_name='sighting_videos', on_delete=models.CASCADE)
 
     class Meta:
         """Meta definition for Video."""
@@ -122,10 +114,9 @@ class Audio(models.Model):
 
     # TODO: Define fields here
     id = models.AutoField(primary_key= True)
-    name = models.CharField(max_length=255)
     file = models.FileField(upload_to='audios/', null=True, verbose_name="Audios")
-    state = models.BooleanField(default=True)
-    sighting = models.ForeignKey(Sighting, on_delete=models.CASCADE)
+    state = models.BooleanField(default=True, blank=True)
+    sighting = models.ForeignKey(Sighting, related_name='sighting_audios', on_delete=models.CASCADE)
 
     class Meta:
         """Meta definition for Audio."""

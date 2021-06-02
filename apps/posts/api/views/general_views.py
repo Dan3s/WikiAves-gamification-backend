@@ -85,21 +85,6 @@ class ContributionViewSet(Authentication, viewsets.ModelViewSet):
         queryset = self.serializer_class.Meta.model.objects.filter(state=True)
         return queryset
 
-class SightingViewSet(Authentication, viewsets.ModelViewSet):
-    serializer_class = SightingSerializer
-    
-    def get_queryset(self):
-        #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
-        return queryset
-
-class BirdViewSet(Authentication, viewsets.ModelViewSet):
-    serializer_class = BirdSerializer
-    
-    def get_queryset(self):
-        #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
-        return queryset
 
 '''class ExpeditionListAPIView(generics.ListAPIView):
     serializer_class = ExpeditionSerializer

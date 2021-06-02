@@ -19,9 +19,12 @@ class SightingSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.id,
-            'expedition': instance.expedition if instance.expedition is not None else '',
-            'bird': instance.bird if instance.bird is not None else '',
-            'creation_date': instance.creation_date,
+            'expedition': instance.expedition.name if instance.expedition is not None else '',
+            'bird_id': instance.bird.id,
+            'bird_common_name': instance.bird.common_name,
+            'bird_scientific_name': instance.bird.scientific_name,
+            'bird_sightings': instance.bird.sightings,
+            'date': instance.date,
             'is_eating': instance.is_eating,
             'is_flying': instance.is_flying,
             'is_preening': instance.is_preening,
@@ -43,9 +46,6 @@ class ContributionSerializer(serializers.ModelSerializer):
         }
 
 class ExpeditionSerializer(serializers.ModelSerializer):
-#   user = serializers.StringRelatedField()#Para mostrar el str del modelo
-    #sighted_birds = SightingSerializer(many = True, source = 'sightings')
-
     class Meta:
         model = Expedition
         exclude = ('state',)

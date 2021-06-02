@@ -2,6 +2,7 @@ from rest_framework import serializers
 from itertools import chain
 
 from apps.posts.models import Sighting
+from apps.posts.utils.user_xp_utils import UserXpUtils
 from apps.users.models import User
 
 class UserTokenSerializer(serializers.ModelSerializer):
@@ -68,9 +69,10 @@ class UserRankingSerializer(serializers.ModelSerializer):
         }
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user_utils = UserXpUtils()
 
-    photos = None
-    species = None
+    photos, species = user_utils.get_quantity_photos_and_species()
+
 
 
     def get_achievements_count(self, obj):
@@ -79,17 +81,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_expeditions_count(self, obj):
         return obj.expedition_set.count()
 
-    def set_photos_and_species(self, obj):
-        query_expeditions = obj.expedition_set.all()
-        #query_sightings = Sighting.object.all()
-        #result_list = list(chain(query_expeditions, query_sightings))
-        print('holaaaaaaa')
 
-        for e in query_expeditions.iterator():
-            print(e.name)
-            for s in e.sighted_birds:
-                self.photos += s.photo_set.count()
-                self.species += s.bird_set.count()
 
 
     class Meta:
@@ -97,7 +89,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        self.set_photos_and_species(instance)
+
         return {
             'id': instance.id,
             'name': instance.name,

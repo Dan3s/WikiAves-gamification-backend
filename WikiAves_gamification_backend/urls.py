@@ -50,6 +50,6 @@ urlpatterns = [
 
     path('user/', include('apps.users.api.urls')),
     path('user/', include('apps.users.api.routers')),
-    #path('posts/', include('apps.posts.api.urls')),
+    path('posts/', include('apps.posts.api.urls')),
     path('posts/', include('apps.posts.api.routers')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

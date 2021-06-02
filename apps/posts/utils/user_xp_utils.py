@@ -1,4 +1,6 @@
+from apps.users.authentication_mixins import Authentication
 from apps.users.models import User
+
 
 LEVEL_NAME = [
     'Colibrí', 'Jacamará coliverde', 'Tángara azulada', 'Pájaro péndulo', 'Cacique candela', 'Perico cara sucia',
@@ -53,3 +55,26 @@ class UserXpUtils:
     def add_xp(self, user, value):
         user.xp += value
         user.save()
+
+    def get_quantity_photos_and_species(self):
+        auth = Authentication()
+        user = auth.user
+
+        print(user)
+
+        photos = None
+        species = None
+
+        if user is not None:
+            query_expeditions = user.expedition_set.all()
+            #query_sightings = Sighting.object.all()
+            #result_list = list(chain(query_expeditions, query_sightings))
+            print('holaaaaaaa')
+
+            for e in query_expeditions.iterator():
+                print(e.name)
+                for s in e.sighted_birds:
+                    photos += s.photo_set.count()
+                    species += s.bird_set.count()
+
+        return photos, species
