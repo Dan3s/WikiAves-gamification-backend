@@ -6,9 +6,9 @@ from apps.posts.api.views.sighting_media_views import PhotoViewSet
 router = DefaultRouter()
 
 router.register(r'expeditions', ExpeditionViewSet, basename='expeditions')
-router.register(r'contributions', ContributionViewSet, basename='contributions')
+#router.register(r'contributions', ContributionViewSet, basename='contributions')
 router.register(r'sightings', SightingViewSet, basename='sightings')
-router.register(r'upload/photos', PhotoViewSet, basename='upload_photos')
+router.register(r'photos', PhotoViewSet, basename='photos')
 #router.register(r'birds', BirdViewSet, basename='birds')
 urlpatterns = router.urls
 

@@ -2,10 +2,10 @@ from abc import ABC
 
 from rest_framework import serializers
 
-from apps.posts.models import Sighting, Photo
+from apps.posts.models import Sighting, Photo, Video, Audio
 
 
-class FileListSerializer(serializers.ModelSerializer):
+class FileListSerializer(serializers.Serializer):
     class Meta:
         model = Photo
         read_only_fields = ("sighting",)
@@ -30,5 +30,18 @@ class FileListSerializer(serializers.ModelSerializer):
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
+        #read_only_fields = ("sighting",)
+        exclude = ('state',)
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        #read_only_fields = ("sighting",)
+        exclude = ('state',)
+
+
+class AudioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Audio
         #read_only_fields = ("sighting",)
         exclude = ('state',)

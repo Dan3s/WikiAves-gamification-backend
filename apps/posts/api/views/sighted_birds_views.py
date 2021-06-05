@@ -23,7 +23,7 @@ class SightingsByExpeditionListAPIView(Authentication, generics.ListAPIView):
     def get_queryset(self):
         # queryset = super(CLASS_NAME, self).get_queryset()
         expedition_id = self.kwargs['id']
-        queryset = self.serializer_class.Meta.model.objects.filter(expedition=expedition_id)
+        queryset = self.serializer_class.Meta.model.objects.filter(expedition=expedition_id, state=True)
         return queryset
 
 class BirdCreateAPIView(Authentication, generics.CreateAPIView):

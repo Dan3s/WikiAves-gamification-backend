@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.posts.models import Expedition, Bird, Sighting, Contribution
+from apps.posts.models import Expedition, Bird, Sighting, Contribution, Photo, Video, Audio
 
 
 class ExpeditionAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
@@ -18,8 +18,24 @@ class ContributionAdmin(admin.ModelAdmin):#Para modificar como se muestran los r
     list_display=('id', 'user')#Esto se hace para mostrar mas campos en el panel de administración
     search_fields=('id', 'user')#Agrega la opción de buscar por estos campos
 
+class PhotoAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
+    list_display=('id', 'file', 'sighting')#Esto se hace para mostrar mas campos en el panel de administración
+    search_fields=('id', 'file', 'sighting')#Agrega la opción de buscar por estos campos
+
+class VideoAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
+    list_display=('id', 'file', 'sighting')#Esto se hace para mostrar mas campos en el panel de administración
+    search_fields=('id', 'file', 'sighting')#Agrega la opción de buscar por estos campos
+
+class AudioAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
+    list_display=('id', 'file', 'sighting')#Esto se hace para mostrar mas campos en el panel de administración
+    search_fields=('id', 'file', 'sighting')#Agrega la opción de buscar por estos campos
+
+
 # Register your models here.
 admin.site.register(Expedition, ExpeditionAdmin)
 admin.site.register(Bird, BirdAdmin)
 admin.site.register(Sighting, SightingAdmin)
 admin.site.register(Contribution, ContributionAdmin)
+admin.site.register(Photo, PhotoAdmin)
+admin.site.register(Video, VideoAdmin)
+admin.site.register(Audio, AudioAdmin)

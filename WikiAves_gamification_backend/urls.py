@@ -48,8 +48,8 @@ urlpatterns = [
     path('logout/', Logout.as_view(), name = "Logout"),
     path('refresh-token/', UserToken.as_view(), name = "refresh_token"),
 
-    path('user/', include('apps.users.api.urls')),
-    path('user/', include('apps.users.api.routers')),
+    path('users/', include('apps.users.api.urls')),
+    path('users/', include('apps.users.api.routers')),
     path('posts/', include('apps.posts.api.urls')),
     path('posts/', include('apps.posts.api.routers')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
