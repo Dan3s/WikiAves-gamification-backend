@@ -19,6 +19,10 @@ class Bird(models.Model):
         verbose_name = 'Ave'
         verbose_name_plural = 'Aves'
 
+    def __str__(self):
+        """Unicode representation of Photo."""
+        return self.scientific_name
+
 class Expedition(models.Model):
     id = models.AutoField(primary_key= True)
     name = models.CharField('Nombre', max_length = 255, null=False, blank = False)
@@ -35,6 +39,10 @@ class Expedition(models.Model):
         verbose_name = 'Expedición'
         verbose_name_plural = 'Expediciones'
 
+    def __str__(self):
+        """Unicode representation of Photo."""
+        return self.name
+
 
 class Sighting(models.Model):
     """Model definition for MODELNAME."""
@@ -48,9 +56,9 @@ class Sighting(models.Model):
     is_flying = models.BooleanField(default=False)
     is_preening = models.BooleanField(default=False)
     is_mating = models.BooleanField(default=False)
-    is_verified = models.CharField(null=True, blank=True, max_length = 25)
+    is_correct = models.BooleanField(default=None, null=True, blank=True)
     likes = models.IntegerField(default=0, blank=True)
-    is_correct = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False, blank=True)
     state = models.BooleanField(default=True)
 
     class Meta:
@@ -59,12 +67,16 @@ class Sighting(models.Model):
         verbose_name = 'Avistamiento'
         verbose_name_plural = 'Avistamientos'
 
+    def __str__(self):
+        """Unicode representation of Photo."""
+        return self.expedition.name
+
 
 class Contribution(models.Model):
     id = models.AutoField(primary_key= True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     sightings = models.ManyToManyField(Sighting)
-    is_correct = models.BooleanField(default=False)
+    vote = models.BooleanField(default=None, null=True, blank=True)
     state = models.BooleanField(default=True)
 
     class Meta:

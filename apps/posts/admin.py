@@ -11,12 +11,12 @@ class BirdAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros
     search_fields=('id', 'common_name', 'scientific_name', 'sightings')#Agrega la opción de buscar por estos campos
 
 class SightingAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
-    list_display=('id', 'expedition', 'bird', 'date', 'is_eating', 'is_flying', 'is_preening', 'is_mating', 'is_verified', 'is_correct')#Esto se hace para mostrar mas campos en el panel de administración
-    search_fields=('id', 'expedition', 'bird', 'date', 'is_eating', 'is_flying', 'is_preening', 'is_mating', 'is_verified',)#Agrega la opción de buscar por estos campos
+    list_display=('id', 'expedition', 'bird', 'date', 'is_eating', 'is_flying', 'is_preening', 'is_mating')#Esto se hace para mostrar mas campos en el panel de administración
+    search_fields=('id', 'expedition', 'bird', 'date', 'is_eating', 'is_flying', 'is_preening', 'is_mating')#Agrega la opción de buscar por estos campos
 
 class ContributionAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
-    list_display=('id', 'user')#Esto se hace para mostrar mas campos en el panel de administración
-    search_fields=('id', 'user')#Agrega la opción de buscar por estos campos
+    list_display=('id', 'user', 'vote')#Esto se hace para mostrar mas campos en el panel de administración
+    search_fields=('id', 'user', 'vote')#Agrega la opción de buscar por estos campos
 
 class PhotoAdmin(admin.ModelAdmin):#Para modificar como se muestran los registros de la tabla CLiente en el panel de admin.
     list_display=('id', 'file', 'sighting')#Esto se hace para mostrar mas campos en el panel de administración
