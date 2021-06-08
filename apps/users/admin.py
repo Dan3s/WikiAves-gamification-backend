@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from apps.users.api.serializers.user_serializers import UserProfileStatisticsSerializer
 from apps.users.models import User, Achievement, UserAchievement
 
 

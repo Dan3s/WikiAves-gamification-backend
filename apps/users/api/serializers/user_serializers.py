@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import serializers
 from itertools import chain
 
@@ -73,7 +75,7 @@ class UserRankingSerializer(serializers.ModelSerializer):
         }
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileStatisticsSerializer(serializers.ModelSerializer):
 
     def get_quantity_species(self, user):
         query_expeditions = user.expedition_set.all()
@@ -99,6 +101,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_expeditions_count(self, obj):
         return obj.expedition_set.count()
 
+    def get_last_login(self, obj):
+        # print(obj.historical.most_recent().last_login = datetime.datetime.now())
+        # print(User.historical.get_history_user(obj).all().filter(username=obj.username).last())
+        # print(obj.historical.last().fi)
+        return obj.historical.most_recent().last_login
+
     class Meta:
         model = User
         fields = '__all__'
@@ -119,6 +127,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'expeditions': self.get_expeditions_count(instance),
             'photos': self.get_quantity_photos(instance),
             'species': self.get_quantity_species(instance),
-            'pages_visited': instance.pages_visited
+            'pages_visited': instance.pages_visited,
+            'last_login': instance.last_login
 
         }
+
+
+class ResetPasswordEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=2)
+
+    class Meta:
+        fields = ['email']
+
+    def validate(self, attrs):
+        try:
+            email = attrs.get('email', '')
+            if User.objects.filter(email=email).exists():
+                pass
+
+        except:
+            pass

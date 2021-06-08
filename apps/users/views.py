@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 from django.contrib.sessions.models import Session
 
 from rest_framework import status
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 
+from WikiAves_gamification_backend.settings.base import TIME_ZONE
 from apps.users.api.serializers.user_serializers import UserTokenSerializer
 from apps.users.authentication_mixins import Authentication
 
@@ -43,13 +45,15 @@ class Login(ObtainAuthToken):
                 token, created = Token.objects.get_or_create(user=user)
                 user_serializer = UserTokenSerializer(user)
                 if created:
+                    user.last_login = timezone.now()
+                    user.save()
                     return Response({
                         'token': token.key,
                         'user': user_serializer.data,
-                        'message': 'Inicio de Sesión Exitoso.'
+                        'message': 'Inicio de sesión exitoso.'
                     }, status=status.HTTP_201_CREATED)
                 else:
-                    all_sessions = Session.objects.filter(expire_date__gte=datetime.now())
+                    all_sessions = Session.objects.filter(expire_date__gte=timezone.now())
                     if all_sessions.exists():
                         for session in all_sessions:
                             session_data = session.get_decoded()

@@ -1,3 +1,5 @@
+from apps.posts.utils.email_utils import EmailUtils
+from apps.users.models import User
 from rest_framework.response import Response
 from rest_framework import viewsets, status, generics, filters
 from rest_framework.views import APIView
@@ -55,17 +57,23 @@ class SearchBirdListAPIView(Authentication, generics.ListAPIView):
 class SightingInteractionAPIView(Authentication, APIView):
 
     def post(self, request, *args, **kwargs):
-        # Enviar correo notificación al usuario--------------
         sighting_id = self.kwargs['sighting_id']
+        recipient_email = [Sighting.objects.filter(id=sighting_id).first().expedition.user.email]
         interaction_type = self.kwargs['type']
+
         if interaction_type == CONTRIBUTION_TYPE[0]:  # like
             sighting_utils = SightingUtils()
             sighting_utils.increase_like(sighting_id)
+            email = EmailUtils()
+            email.send_notification_email(recipient_email, self.user.username)
         elif interaction_type == CONTRIBUTION_TYPE[1]:  # vote
             sighting_utils = SightingUtils()
             try:
                 if request.data['vote'] or not request.data['vote']:
                     sighting_utils.create_user_vote_contribution(self.user, sighting_id, request.data['vote'])
+                    sighting_utils.increase_like(sighting_id)
+                    email = EmailUtils()
+                    email.send_notification_email(recipient_email, self.user.username, request.data['vote'])
             except:
                 return Response({'message': 'El atributo del body vote debe ser true o false, booleano sin comillas'},
                                 status=status.HTTP_400_BAD_REQUEST)
