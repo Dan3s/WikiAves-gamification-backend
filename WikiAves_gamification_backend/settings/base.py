@@ -157,3 +157,5 @@ EMAIL_HOST_PASSWORD = "wikiaves12345"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+FRONTEND_URL = "http://localhost:8000"
+

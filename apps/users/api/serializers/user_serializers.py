@@ -1,9 +1,14 @@
 import datetime
+from abc import ABC
 
 from rest_framework import serializers
-from itertools import chain
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_bytes, smart_str, force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from rest_framework.exceptions import AuthenticationFailed
 
 from apps.posts.models import Sighting
+
 from apps.posts.utils.user_xp_utils import UserXpUtils
 from apps.users.authentication_mixins import Authentication
 from apps.users.models import User
@@ -136,14 +141,38 @@ class UserProfileStatisticsSerializer(serializers.ModelSerializer):
 class ResetPasswordEmailSerializer(serializers.Serializer):
     email = serializers.EmailField(min_length=2)
 
+    redirect_url = serializers.CharField(max_length=500, required=False)
+
     class Meta:
         fields = ['email']
 
     def validate(self, attrs):
-        try:
-            email = attrs.get('email', '')
-            if User.objects.filter(email=email).exists():
-                pass
+        email = attrs.get('email', '')
+        return super().validate(attrs)
 
-        except:
-            pass
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(min_length=6, max_length=64, write_only=True)
+    token = serializers.CharField(min_length=1, write_only=True)
+    uidb64 = serializers.CharField(min_length=1, write_only=True)
+
+    class Meta:
+        fields=['password', 'token', 'uidb64']
+
+    def validate(self, attrs):
+        try:
+            password = attrs.get('password')
+            token = attrs.get('token')
+            uidb64 = attrs.get('uidb64')
+
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise AuthenticationFailed('El link de reestablecimiento de contraseña es inválido', 401)
+            user.set_password(password)
+            user.save()
+            return user
+        except Exception as e:
+            raise AuthenticationFailed('El link de reestablecimiento de contraseña es inválido', 401)
+        return super().validate(attrs)
+

@@ -1,5 +1,17 @@
 from django.core.mail import EmailMessage
 
+import threading
+
+
+class EmailThread(threading.Thread):  # Mejora la velocidad del envío de emails
+
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
+
 
 class EmailUtils(object):
 
@@ -17,7 +29,8 @@ class EmailUtils(object):
             body = 'Al usuario ' + trigger_username + ' le ha gustado tu avistamiento'
 
         email = EmailMessage(subject='¡Han interactuado con tu avistamiento!', body=body, to=destination_email)
-        email.send()
+        EmailThread(email).start()
 
-    def send_recovery_password_email(self):
-        pass
+    def send_recovery_password_email(self, data):
+        email = EmailMessage(subject=data['email_subject'], body=data['email_body'], to=[data['to_email']])
+        EmailThread(email).start()
