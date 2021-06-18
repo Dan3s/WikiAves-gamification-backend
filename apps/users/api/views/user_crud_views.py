@@ -19,7 +19,7 @@ def user_api_view(request): #Para usar las funciones se debe usar un Decorator
         users_serializer = UserSerializer(data = request.data)
         if users_serializer.is_valid():
             users_serializer.save()
-            return Response({'message': 'Usuario creado correctamente'}, status = status.HTTP_201_CREATED)
+            return Response({'message': 'Usuario creado correctamente', }, status = status.HTTP_201_CREATED)
         return Response(users_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])

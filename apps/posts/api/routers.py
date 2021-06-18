@@ -6,11 +6,10 @@ from apps.posts.api.views.sighting_media_views import PhotoViewSet, VideoViewSet
 router = DefaultRouter()
 
 router.register(r'expeditions', ExpeditionViewSet, basename='expeditions')
-#router.register(r'contributions', ContributionViewSet, basename='contributions')
 router.register(r'sightings', SightingViewSet, basename='sightings')
 router.register(r'photos', PhotoViewSet, basename='photos')
 router.register(r'videos', VideoViewSet, basename='videos')
 router.register(r'audios', AudioViewSet, basename='audios')
-#router.register(r'birds', BirdViewSet, basename='birds')
+
 urlpatterns = router.urls
 

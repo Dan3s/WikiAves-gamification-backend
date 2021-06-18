@@ -8,9 +8,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework.exceptions import AuthenticationFailed
 
 from apps.posts.models import Sighting
-
-from apps.posts.utils.user_xp_utils import UserXpUtils
-from apps.users.authentication_mixins import Authentication
 from apps.users.models import User
 
 

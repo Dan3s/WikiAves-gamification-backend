@@ -102,13 +102,13 @@ class RequestPasswordResetEmailGenericAPIView(generics.GenericAPIView):
             current_site = get_current_site(request=request).domain
             relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
 
-            redirect_url=request.data.get('redirect_url', '')
+            redirect_url = request.data.get('redirect_url', '')
             absurl = 'http://' + current_site + relative_link
             email_body = '¡Hola! \nUsa el siguiente link para reestablecer tu contraseña:\n' \
-                         + absurl+'?redirect_url='+redirect_url
+                         + absurl + '?redirect_url=' + redirect_url
             email_data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'Reestablecer contraseña'}
             email_utils = EmailUtils()
-            email_utils.send_recovery_password_email(email_data)
+            email_utils.send_email(email_data)
         return Response({'message': 'Se ha enviado un link para reestablecer tu contraseña'}, status=status.HTTP_200_OK)
 
 
@@ -122,12 +122,13 @@ class PasswordTokenCheckGenericAPIView(generics.GenericAPIView):
 
             if not PasswordResetTokenGenerator().check_token(user, token):
                 if len(redirect_url) > 3:
-                    return CustomRedirect(redirect_url+'?token_valid=False')
+                    return CustomRedirect(redirect_url + '?token_valid=False')
                 else:
                     return CustomRedirect(FRONTEND_URL + '?token_valid=False')
 
             if redirect_url and len(redirect_url) > 3:
-                return CustomRedirect(redirect_url+'?token_valid=True&?message=Credenciales válidas&?uidb64='+uidb64+'&?token='+token)
+                return CustomRedirect(
+                    redirect_url + '?token_valid=True&?message=Credenciales válidas&?uidb64=' + uidb64 + '&?token=' + token)
             else:
                 return CustomRedirect(FRONTEND_URL + '?token_valid=False')
 
@@ -135,8 +136,9 @@ class PasswordTokenCheckGenericAPIView(generics.GenericAPIView):
             if not PasswordResetTokenGenerator().check_token(user, token):
                 return CustomRedirect(redirect_url + '?token_valid=False')
 
+
 class SetNewPasswordGenericAPIView(generics.GenericAPIView):
-    serializer_class =  SetNewPasswordSerializer
+    serializer_class = SetNewPasswordSerializer
 
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)

@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.users.api.api import user_api_view, user_detail_view
+from apps.users.api.views.user_crud_views import user_api_view, user_detail_view
 from apps.users.api.views.general_views import AchievementListAPIView, ProfileView, UserAchievementsListAPIView, \
     UserRankingListAPIView, UserRankingByRegionListAPIView, RequestPasswordResetEmailGenericAPIView, \
     PasswordTokenCheckGenericAPIView, SetNewPasswordGenericAPIView

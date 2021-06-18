@@ -31,6 +31,6 @@ class EmailUtils(object):
         email = EmailMessage(subject='¡Han interactuado con tu avistamiento!', body=body, to=destination_email)
         EmailThread(email).start()
 
-    def send_recovery_password_email(self, data):
+    def send_email(self, data):
         email = EmailMessage(subject=data['email_subject'], body=data['email_body'], to=[data['to_email']])
         EmailThread(email).start()

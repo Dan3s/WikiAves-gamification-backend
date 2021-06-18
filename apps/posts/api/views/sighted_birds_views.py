@@ -1,4 +1,6 @@
+from apps.posts.utils.achievement_utils import AchievementsCheckers
 from apps.posts.utils.email_utils import EmailUtils
+from apps.posts.utils.user_xp_utils import ADD_SIGHTING_XP_VALUE, UserXpUtils, CONTRIBUTION_XP_VALUE
 from apps.users.models import User
 from rest_framework.response import Response
 from rest_framework import viewsets, status, generics, filters
@@ -14,6 +16,31 @@ CONTRIBUTION_TYPE = ['like', 'vote']
 
 class SightingViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = SightingSerializer
+
+    def create(self, request):
+        achievement_name, achievement_descript = AchievementsCheckers.check_first_sighting(self.user)
+        if achievement_name is None:
+            UserXpUtils.add_xp(self.user, ADD_SIGHTING_XP_VALUE)
+        level_unlocked = UserXpUtils.check_level(self.user)
+        achievement_level_name, achievement_level_descript = AchievementsCheckers.check_levels_achievement(self.user)
+
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Avistamiento creado correctamente", "achieve_name": achievement_name,
+                             "achieve_description": achievement_descript,
+                             "level_up": level_unlocked, "achieve_level_name": achievement_level_name,
+                             "achieve_level_descript": achievement_level_descript}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, *args, **kwargs):
+
+        user = self.user
+        user.pages_visited += 1
+        user.save()
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def get_queryset(self):
         # expedition_id = self.kwargs['id']
@@ -68,8 +95,20 @@ class SightingInteractionAPIView(Authentication, APIView):
             email.send_notification_email(recipient_email, self.user.username)
         elif interaction_type == CONTRIBUTION_TYPE[1]:  # vote
             sighting_utils = SightingUtils()
+            achievements_utils = AchievementsCheckers()
+            xp_utils = UserXpUtils()
+
+            achievement_name, achievement_descript = achievements_utils.check_first_contribution(self.user)
+            if achievement_name is None:
+                xp_utils.add_xp(self.user, CONTRIBUTION_XP_VALUE)
+
+            level_unlocked = xp_utils.check_level(self.user)
+            achievement_level_name, achievement_level_descript = achievements_utils.check_levels_achievement(
+                self.user)
+
             try:
                 if request.data['vote'] or not request.data['vote']:
+
                     sighting_utils.create_user_vote_contribution(self.user, sighting_id, request.data['vote'])
                     sighting_utils.increase_like(sighting_id)
                     email = EmailUtils()
@@ -80,4 +119,7 @@ class SightingInteractionAPIView(Authentication, APIView):
         else:
             return Response({'message': 'Error en parámetro type'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({'message': 'Interacción realizada correctamente'}, status=status.HTTP_200_OK)
+        return Response({"message": "Interacción realizada correctamente", "achieve_name": achievement_name,
+                         "achieve_description": achievement_descript,
+                         "level_up": level_unlocked, "achieve_level_name": achievement_level_name,
+                         "achieve_level_descript": achievement_level_descript}, status=status.HTTP_200_OK)
