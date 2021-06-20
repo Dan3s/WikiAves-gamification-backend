@@ -18,15 +18,21 @@ class SightingViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = SightingSerializer
 
     def create(self, request):
-        achievement_name, achievement_descript = AchievementsCheckers.check_first_sighting(self.user)
-        if achievement_name is None:
-            UserXpUtils.add_xp(self.user, ADD_SIGHTING_XP_VALUE)
-        level_unlocked = UserXpUtils.check_level(self.user)
-        achievement_level_name, achievement_level_descript = AchievementsCheckers.check_levels_achievement(self.user)
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+
             serializer.save()
+            achievements_utils = AchievementsCheckers()
+            xp_utils = UserXpUtils()
+
+            achievement_name, achievement_descript = achievements_utils.check_first_sighting(self.user)
+            if achievement_name is None:
+                xp_utils.add_xp(self.user, ADD_SIGHTING_XP_VALUE)
+
+            level_unlocked = xp_utils.check_level(self.user)
+            achievement_level_name, achievement_level_descript = achievements_utils.check_levels_achievement(
+                self.user)
             return Response({"message": "Avistamiento creado correctamente", "achieve_name": achievement_name,
                              "achieve_description": achievement_descript,
                              "level_up": level_unlocked, "achieve_level_name": achievement_level_name,
@@ -108,9 +114,7 @@ class SightingInteractionAPIView(Authentication, APIView):
 
             try:
                 if request.data['vote'] or not request.data['vote']:
-
                     sighting_utils.create_user_vote_contribution(self.user, sighting_id, request.data['vote'])
-                    sighting_utils.increase_like(sighting_id)
                     email = EmailUtils()
                     email.send_notification_email(recipient_email, self.user.username, request.data['vote'])
             except:
