@@ -69,14 +69,6 @@ class ExpeditionViewSet(Authentication, viewsets.ModelViewSet): #En ExpeditionsV
         return Response({'message': 'No existe esa expedición' }, status = status.HTTP_400_BAD_REQUEST)
 
 
-class ContributionViewSet(Authentication, viewsets.ModelViewSet):
-    serializer_class = ContributionSerializer
-    
-    def get_queryset(self):
-        #queryset = super(CLASS_NAME, self).get_queryset()
-        queryset = self.serializer_class.Meta.model.objects.filter(state=True)
-        return queryset
-
 
 '''class ExpeditionListAPIView(generics.ListAPIView):
     serializer_class = ExpeditionSerializer

@@ -2,7 +2,7 @@ from django.urls import path
 from apps.users.api.views.user_crud_views import user_api_view, user_detail_view
 from apps.users.api.views.general_views import AchievementListAPIView, ProfileView, UserAchievementsListAPIView, \
     UserRankingListAPIView, UserRankingByRegionListAPIView, RequestPasswordResetEmailGenericAPIView, \
-    PasswordTokenCheckGenericAPIView, SetNewPasswordGenericAPIView
+    PasswordTokenCheckGenericAPIView, SetNewPasswordGenericAPIView, UserExpeditionsListAPIView
 
 urlpatterns = [
     path('user', user_api_view, name = 'usuario_api'),
@@ -10,6 +10,7 @@ urlpatterns = [
     path('achievements', AchievementListAPIView.as_view(), name = 'achievements'),
     path('<int:pk>/profile', ProfileView.as_view(), name='user_profile'),
     path('<int:pk>/achievements', UserAchievementsListAPIView.as_view(), name='user_achievements'),
+    path('<int:pk>/expeditions', UserExpeditionsListAPIView.as_view(), name = 'expeditions_by_user'),
     path('ranking', UserRankingListAPIView.as_view(), name='ranking'),
     path('ranking/<str:region>', UserRankingByRegionListAPIView.as_view(), name='ranking_by_region'),
     path('request-reset-email', RequestPasswordResetEmailGenericAPIView.as_view(), name='request-reset-email'),

@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from WikiAves_gamification_backend.settings.base import FRONTEND_URL
+from apps.posts.api.serializers.general_serializers import ExpeditionSerializer
 from apps.users.models import Achievement
 from apps.users.api.serializers.achievement_serializers import AchievementSerializer, UserAchievementSerializer
 from apps.users.api.serializers.user_serializers import UserRankingSerializer, \
@@ -25,6 +26,16 @@ from apps.users.models import User
 class CustomRedirect(HttpResponsePermanentRedirect):
     allowed_schemes = ['http', 'https']
 
+
+
+class UserExpeditionsListAPIView(Authentication, generics.ListAPIView):
+    serializer_class = ExpeditionSerializer
+
+    def get_queryset(self):
+        # queryset = super(CLASS_NAME, self).get_queryset()
+        user_id = self.kwargs['pk']
+        queryset = self.serializer_class.Meta.model.objects.filter(user=user_id)
+        return queryset
 
 class AchievementListAPIView(Authentication, generics.ListAPIView):
     serializer_class = AchievementSerializer

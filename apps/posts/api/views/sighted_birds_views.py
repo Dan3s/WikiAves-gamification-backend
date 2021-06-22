@@ -90,6 +90,11 @@ class SearchBirdListAPIView(Authentication, generics.ListAPIView):
 class SightingInteractionAPIView(Authentication, APIView):
 
     def post(self, request, *args, **kwargs):
+        achievement_name, achievement_descript = '', ''
+        level_unlocked = ''
+        achievement_level_name, achievement_level_descript = '', ''
+
+
         sighting_id = self.kwargs['sighting_id']
         recipient_email = [Sighting.objects.filter(id=sighting_id).first().expedition.user.email]
         interaction_type = self.kwargs['type']
